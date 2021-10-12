@@ -73,6 +73,7 @@ const Video = styled.video`
 `
 
 export default class VideoRecorder extends Component {
+
   static propTypes = {
     /** Whether or not to start the camera initially */
     isOnInitially: PropTypes.bool,
@@ -489,6 +490,17 @@ export default class VideoRecorder extends Component {
     })
   }
 
+  handleRecordingComplete = (
+    videoData,
+    startedAt,
+    thumbnailBlob,
+    duration,
+  ) => {
+    if (this.replayVideo.current) {
+      this.replayVideo.current?.resetState();
+    }
+  };
+
   handleStop = (event) => {
     const endedAt = new Date().getTime()
 
@@ -525,8 +537,8 @@ export default class VideoRecorder extends Component {
       })
 
       this.turnOffCamera()
-
-      this.props.onRecordingComplete(
+      debugger
+      this.handleRecordingComplete(
         fixedVideoBlob,
         startedAt,
         thumbnailBlob,
@@ -595,7 +607,7 @@ export default class VideoRecorder extends Component {
           videoUrl: window.URL.createObjectURL(video)
         })
 
-        this.props.onRecordingComplete(
+        this.onRecordingComplete(
           video,
           startedAt,
           thumbnail,
